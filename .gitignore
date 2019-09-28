@@ -1,0 +1,8 @@
+BEE1/
+BEE2/
+BUZZ1/
+BUZZ2/
+*.pdf
+*.wav
+__pycache__/
+original_datasets/
