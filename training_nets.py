@@ -477,3 +477,31 @@ def collect_some_3_hidden(cost_function,
 
 
 
+
+# === BEE1 ==
+def load_bee1_data():
+    f = gzip.open('bee1.pck.gz', 'rb')
+    training_data, validation_data, test_data = pickle.load(f)
+    f.close()
+    return (training_data, validation_data, test_data)
+
+def train_bee1()
+   current_net = network2.Network([784, current_hidden_a, current_hidden_b, 10], cost=cost_function)
+   current_stats = current_net.SGD(train_data, num_epochs, mbs, eta, lmbda=lmbda, evaluation_data=eval_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
+   return current_net, current_stats
+
+
+# == BEE2_1S ==
+def load_bee2_1S_data():
+    f = gzip.open('bee2_1S.pck.gz', 'rb')
+    training_data, validation_data, test_data = pickle.load(f)
+    f.close()
+    return (training_data, validation_data, test_data)
+
+
+# == BEE2_2S ==
+def load_bee2_2S_data():
+    f = gzip.open('bee2_2S.pck.gz', 'rb')
+    training_data, validation_data, test_data = pickle.load(f)
+    f.close()
+    return (training_data, validation_data, test_data)
