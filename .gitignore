@@ -6,3 +6,4 @@ BUZZ2/
 *.wav
 __pycache__/
 original_datasets/
+bee2*.pck.gz

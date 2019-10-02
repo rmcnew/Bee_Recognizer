@@ -30,21 +30,24 @@ def load_pickle(file_name):
         nn = cPickle.load(fp)
     return nn
 
-# Image and Sound loading functions
-def load_image(image_path, shape_length):
+def load_image(image_path, expected_width, expected_height):
+    expected_length = expected_width * expected_height
     image = cv2.imread(image_path)
+    height, width = image.shape[:2]
+    if width != expected_width or height != expected_height:
+        image = cv2.resize(image, (expected_width, expected_height), interpolation=cv2.INTER_CUBIC)
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     scaled_gray_image = gray_image/255.0
-    shaped = np.reshape(scaled_gray_image, (shape_length, 1))  
+    shaped = np.reshape(scaled_gray_image, (expected_length, 1))  
     return shaped
 
 data = []
 
-def traverse_directory_for_images(path, bee_setting, shape_length):
+def traverse_directory_for_images(path, bee_setting, expected_width, expected_height):
     for dirpath, dirnames, filenames in os.walk(path):
         for matched_file in fnmatch.filter(filenames, "*.png"):
             full_path_file = os.path.join(dirpath, matched_file)
             print("Processing {}".format(full_path_file))
-            img = np.array(load_image(full_path_file, shape_length))
+            img = np.array(load_image(full_path_file, expected_width, expected_height))
             data.append((img, bee_setting))
 
