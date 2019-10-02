@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import cv2
 from scipy.io import wavfile
 
+import network2
 
 
 #### Define the quadratic and cross-entropy cost functions
@@ -473,17 +474,6 @@ def collect_some_3_hidden(cost_function,
             stats_filename = os.getcwd() + "/stats_step_30_3_hidden_layer_e{}_l{}".format(str(int(eta * 100)), str(int(lamda * 100)))
             with open(stats_filename, "a") as fh:
                 print(stats, file=fh)
-.getcwd() + "/net_step_30_3_hidden_layer_ha{}_hb{}_hc{}_e{}_b{}_r{}_l{}".format(str(current_hidden_a), str(current_hidden_b), str(current_hidden_c), str(num_epochs), str(mbs), str(int(eta * 100)), str(int(lmbda * 100)))
-               print("Saving net to " + filename)
-               current_net.save(filename) 
-   return results
 
 
-# iterate through various values of eta and lambda, calling step_30_collect_3_hidden_layer_net_stats for each
-def collect_some_3_hidden(cost_function,
-        train_data,
-        eval_data):
-    for eta in list(map(lambda x: x/10, range(1, 11))):  # 0.1 to 1.0 
-        for lamda in list(map(lambda x: x/10, range(0, 75, 5))):  # 0.0 to 7.0
-            stats = step_30_collect_3_hidden_layer_net_stats(30, 100, cost_function, 30, 1
-            
+
