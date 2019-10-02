@@ -17,11 +17,12 @@ import pickle as cPickle
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
+import cv2
+from scipy.io import wavfile
 
-import network2
+
 
 #### Define the quadratic and cross-entropy cost functions
-
 class QuadraticCost(object):
 
     @staticmethod
@@ -340,6 +341,7 @@ def load(filename):
     net.biases = [np.array(b) for b in data["biases"]]
     return net
 
+
 #### Miscellaneous functions
 # save and load pickle functions grabbed from hw02
 def save_pickle(ann, file_name):
@@ -352,6 +354,19 @@ def load_pickle(file_name):
         nn = cPickle.load(fp)
     return nn
 
+
+# Image and Sound loading functions
+def load_and_scale_image(image_path):
+    image = cv2.imread(image_path)
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    scaled_gray_image = gray_image/255.0
+    return scaled_gray_image
+
+
+def load_and_scale_sound(sound_path):
+    samplerate, audio = wavfile.read(sound_path)
+    scaled_audio = audio/float(np.max(audio))
+    return scaled_audio
 
 
 def vectorized_result(j):
@@ -389,106 +404,7 @@ def plot_accuracies(eval_accs, train_accs, num_epochs):
     plt.show()
 
 
-## num_nodes -> (eval_cost, eval_acc, train_cost, train_acc)
-## use this function to compute the eval_acc and min_cost.
-# ================== One Hidden Layer ========================
-def collect_1_hidden_layer_net_stats(lower_num_hidden_nodes,
-        upper_num_hidden_nodes,
-        cost_function,
-        num_epochs,
-        mbs,
-        eta,
-        lmbda,
-        train_data,
-        eval_data):
-   results = {}
-   for current_hidden in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1):
-       current_net = network2.Network([784, current_hidden, 10], cost=cost_function)
-       current_stats = current_net.SGD(train_data, num_epochs, mbs, eta, lmbda=lmbda, evaluation_data=eval_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
-       results[current_hidden] = current_stats
-       filename = os.getcwd() + "/net_1_hidden_layer_h{}_e{}_b{}_r{}_l{}".format(str(current_hidden), str(num_epochs), str(mbs), str(int(eta * 100)), str(int(lmbda * 100)))
-       print("Saving net to " + filename)
-       current_net.save(filename) 
-   return results
-
-# iterate through various values of eta and lambda, calling collect_1_hidden_layer_net_stats for each
-def collect_all_1_hidden(cost_function,
-        train_data,
-        eval_data):
-    for eta in list(map(lambda x: x/10, range(1, 11))):  # 0.1 to 1.0 
-        for lamda in list(map(lambda x: x/10, range(0, 75, 5))):  # 0.0 to 7.0
-            stats = collect_1_hidden_layer_net_stats(30, 100, cost_function, 30, 12, eta, lamda, train_data, eval_data)
-            stats_filename = os.getcwd() + "/stats_1_hidden_layer_e{}_l{}".format(str(int(eta * 100)), str(int(lamda * 100)))
-            with open(stats_filename, "a") as fh:
-                print(stats, file=fh)
-
-# train nets in the same manner as collect_1_hidden_layer_net_stats but use a step of 10 instead of exhaustively
-def step_10_collect_1_hidden_layer_net_stats(lower_num_hidden_nodes,
-        upper_num_hidden_nodes,
-        cost_function,
-        num_epochs,
-        mbs,
-        eta,
-        lmbda,
-        train_data,
-        eval_data):
-   results = {}
-   for current_hidden in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1, 10):
-       current_net = network2.Network([784, current_hidden, 10], cost=cost_function)
-       current_stats = current_net.SGD(train_data, num_epochs, mbs, eta, lmbda=lmbda, evaluation_data=eval_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
-       results[current_hidden] = current_stats
-       filename = os.getcwd() + "/net_step_10_1_hidden_layer_h{}_e{}_b{}_r{}_l{}".format(str(current_hidden), str(num_epochs), str(mbs), str(int(eta * 100)), str(int(lmbda * 100)))
-       print("Saving net to " + filename)
-       current_net.save(filename) 
-   return results
-
-# iterate through various values of eta and lambda, calling step_10_collect_1_hidden_layer_net_stats for each
-def collect_some_1_hidden(cost_function,
-        train_data,
-        eval_data):
-    for eta in list(map(lambda x: x/10, range(1, 11))):  # 0.1 to 1.0 
-        for lamda in list(map(lambda x: x/10, range(0, 75, 5))):  # 0.0 to 7.0
-            stats = step_10_collect_1_hidden_layer_net_stats(30, 100, cost_function, 30, 12, eta, lamda, train_data, eval_data)
-            stats_filename = os.getcwd() + "/stats_step_10_1_hidden_layer_e{}_l{}".format(str(int(eta * 100)), str(int(lamda * 100)))
-            with open(stats_filename, "a") as fh:
-                print(stats, file=fh)
-
-
 # ================== Two Hidden Layers ========================
-def collect_2_hidden_layer_net_stats(lower_num_hidden_nodes,
-        upper_num_hidden_nodes,
-        cost_function,
-        num_epochs,
-        mbs,
-        eta,
-        lmbda,
-        train_data,
-        eval_data):
-   results = {}
-   for current_hidden_a in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1):
-       for current_hidden_b in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1):
-           current_net = network2.Network([784, current_hidden_a, current_hidden_b, 10], cost=cost_function)
-           current_stats = current_net.SGD(train_data, num_epochs, mbs, eta, lmbda=lmbda, evaluation_data=eval_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
-           key = "{}_{}".format(str(current_hidden_a), str(current_hidden_b))
-           results[key] = current_stats
-           filename = os.getcwd() + "/net_2_hidden_layer_ha{}_hb{}_e{}_b{}_r{}_l{}".format(str(current_hidden_a), str(current_hidden_b), str(num_epochs), str(mbs), str(int(eta * 100)), str(int(lmbda * 100)))
-           print("Saving net to " + filename)
-           current_net.save(filename) 
-   return results
-
-
-# iterate through various values of eta and lambda, calling collect_2_hidden_layer_net_stats for each
-def collect_all_2_hidden(cost_function,
-        train_data,
-        eval_data):
-    for eta in list(map(lambda x: x/10, range(1, 11))):  # 0.1 to 1.0 
-        for lamda in list(map(lambda x: x/10, range(0, 75, 5))):  # 0.0 to 7.0
-            stats = collect_2_hidden_layer_net_stats(30, 100, cost_function, 30, 12, eta, lamda, train_data, eval_data)
-            stats_filename = os.getcwd() + "/stats_2_hidden_layer_e{}_l{}".format(str(int(eta * 100)), str(int(lamda * 100)))
-            with open(stats_filename, "a") as fh:
-                print(stats, file=fh)
-
-
 # train nets in the same manner as collect_2_hidden_layer_net_stats but use a step of 20 instead of exhaustively
 def step_20_collect_2_hidden_layer_net_stats(lower_num_hidden_nodes,
         upper_num_hidden_nodes,
@@ -523,43 +439,6 @@ def collect_some_2_hidden(cost_function,
                 print(stats, file=fh)
 
 # ================== Three Hidden Layers ========================
-def collect_3_hidden_layer_net_stats(lower_num_hidden_nodes,
-        upper_num_hidden_nodes,
-        cost_function,
-        num_epochs,
-        mbs,
-        eta,
-        lmbda,
-        train_data,
-        eval_data):
-   results = {}
-   for current_hidden_a in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1):
-       for current_hidden_b in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1):
-           for current_hidden_c in range(lower_num_hidden_nodes, upper_num_hidden_nodes + 1):
-               current_net = network2.Network([784, current_hidden_a, current_hidden_b, current_hidden_c, 10], cost=cost_function)
-               current_stats = current_net.SGD(train_data, num_epochs, mbs, eta, lmbda=lmbda, evaluation_data=eval_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
-               key = "{}_{}_{}".format(str(current_hidden_a), str(current_hidden_b), str(current_hidden_c))
-               results[key] = current_stats
-               filename = os.getcwd() + "/net_3_hidden_layer_ha{}_hb{}_hc{}_e{}_b{}_r{}_l{}".format(str(current_hidden_a), str(current_hidden_b), str(current_hidden_c), str(num_epochs), str(mbs), str(int(eta * 100)), str(int(lmbda * 100)))
-               print("Saving net to " + filename)
-               current_net.save(filename) 
-   return results
-
-
-# iterate through various values of eta and lambda, calling collect_3_hidden_layer_net_stats for each
-def collect_all_3_hidden(cost_function,
-        train_data,
-        eval_data):
-    for eta in list(map(lambda x: x/10, range(1, 11))):  # 0.1 to 1.0 
-        for lamda in list(map(lambda x: x/10, range(0, 75, 5))):  # 0.0 to 7.0
-            stats = collect_3_hidden_layer_net_stats(30, 100, cost_function, 30, 12, eta, lamda, train_data, eval_data)
-            stats_filename = os.getcwd() + "/stats_3_hidden_layer_e{}_l{}".format(str(int(eta * 100)), str(int(lamda * 100)))
-            with open(stats_filename, "a") as fh:
-                print(stats, file=fh)
-
-
-
-
 # train nets in the same manner as collect_3_hidden_layer_net_stats but use a step of 30 instead of exhaustively
 def step_30_collect_3_hidden_layer_net_stats(lower_num_hidden_nodes,
         upper_num_hidden_nodes,
@@ -608,30 +487,3 @@ def collect_some_3_hidden(cost_function,
         for lamda in list(map(lambda x: x/10, range(0, 75, 5))):  # 0.0 to 7.0
             stats = step_30_collect_3_hidden_layer_net_stats(30, 100, cost_function, 30, 1
             
-# Details about selected networks:
-# net_1  (originally named "net_step_10_1_hidden_layer_h100_e30_b12_r10_l50")
-# Layers:  784 x 100 x 10
-# Epochs:  30
-# Mini-batch size:  12
-# Eta:  0.1
-# Lambda:  5.0
-# test_d accuracy:  9795 / 10000
-# valid_d accuracy:  9785 / 10000
-
-# net_2  (originally named "net_step_20_2_hidden_layer_ha90_hb30_e30_b12_r10_l50")
-# Layers:  784 x 90 x 30 x 10
-# Epochs:  30
-# Mini-batch size:  12
-# Eta:  0.1
-# Lambda:  5.0
-# test_d accuracy:  9797 / 10000
-# valid_d accuracy:  9804 / 10000
-
-# net_3 (originally named "net_step_30_3_hidden_layer_ha90_hb90_hc60_e30_b12_r10_l50")
-# Layers:  784 x 90 x 90 x 60 x 10
-# Epochs:  30
-# Mini-batch size:  12
-# Eta:  0.1
-# Lambda:  5.0
-# test_d accuracy:  9765 / 10000
-# valid_d accuracy:  9779 / 10000
