@@ -12,6 +12,7 @@ import random
 import sys
 import os
 import pickle as cPickle
+import gzip
 
 # Third-party libraries
 import numpy as np
@@ -481,13 +482,13 @@ def collect_some_3_hidden(cost_function,
 # === BEE1 ==
 def load_bee1_data():
     f = gzip.open('bee1.pck.gz', 'rb')
-    training_data, validation_data, test_data = pickle.load(f)
+    train_data, test_data, valid_data = cPickle.load(f)
     f.close()
-    return (training_data, validation_data, test_data)
+    return (train_data, test_data, valid_data)
 
-def train_bee1()
-   current_net = network2.Network([784, current_hidden_a, current_hidden_b, 10], cost=cost_function)
-   current_stats = current_net.SGD(train_data, num_epochs, mbs, eta, lmbda=lmbda, evaluation_data=eval_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
+def train_bee1(train_data, test_data, num_epochs, batch_size, learning_rate, lmbda):
+   current_net = network2.Network([1024, 500, 100, 2], cost=CrossEntropyCost)
+   current_stats = current_net.SGD(train_data, num_epochs, batch_size, learning_rate, lmbda=lmbda, evaluation_data=test_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
    return current_net, current_stats
 
 

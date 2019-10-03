@@ -14,8 +14,8 @@ import cv2
 
 
 # bee definitions
-BEE = np.array([1, 0])
-NO_BEE = np.array([0, 1])
+BEE = np.reshape(np.array([1, 0]), (2, 1))
+NO_BEE = np.reshape(np.array([0, 1]), (2, 1))
 
 
 #### Miscellaneous functions

@@ -262,6 +262,7 @@ class Network(object):
         # backward pass: zs[-1] is not used.
         # activations[-1] - y = (a - y).
         delta = (self.cost).delta(zs[-1], activations[-1], y)
+        #print("delta is {}".format(delta))
         ## delta = (a^{L}_{j} - y_{j})
         nabla_b[-1] = delta
         ## nabla_w = a^{L-1}_{k}(a^{L}_{j} - y_{j}).
