@@ -145,6 +145,7 @@ class Network(object):
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
         for j in range(epochs):
+            print("Training epoch {}".format(j))
             random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k+mini_batch_size]
@@ -319,12 +320,13 @@ class Network(object):
         the validation or test data.  See comments on the similar (but
         reversed) convention for the ``accuracy`` method, above.
         """
+        data_length = len(data)
         cost = 0.0
         for x, y in data:
             a = self.feedforward(x)
             if convert: y = vectorized_result(y)
-            cost += self.cost.fn(a, y)/len(data)
-        cost += 0.5*(lmbda/len(data))*sum(
+            cost += self.cost.fn(a, y)/data_length
+        cost += 0.5*(lmbda/data_length)*sum(
             np.linalg.norm(w)**2 for w in self.weights)
         return cost
 

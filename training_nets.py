@@ -487,9 +487,11 @@ def load_bee1_data():
     return (train_data, test_data, valid_data)
 
 def train_bee1(train_data, test_data, num_epochs, batch_size, learning_rate, lmbda):
-   current_net = network2.Network([1024, 500, 100, 2], cost=CrossEntropyCost)
-   current_stats = current_net.SGD(train_data, num_epochs, batch_size, learning_rate, lmbda=lmbda, evaluation_data=test_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
-   return current_net, current_stats
+    print("Creating net")
+    current_net = network2.Network([1024, 500, 100, 2], cost=CrossEntropyCost)
+    print("Training net")
+    current_stats = current_net.SGD(train_data, num_epochs, batch_size, learning_rate, lmbda=lmbda, evaluation_data=test_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
+    return current_net, current_stats
 
 
 # == BEE2_1S ==
