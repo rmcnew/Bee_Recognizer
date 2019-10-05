@@ -1,9 +1,2 @@
-BEE1/
-BEE2/
-BUZZ1/
-BUZZ2/
-*.pdf
-*.wav
+datasets
 __pycache__/
-original_datasets/
-bee2*.pck.gz

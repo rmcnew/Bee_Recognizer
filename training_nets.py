@@ -484,27 +484,28 @@ def load_bee1_data():
     f = gzip.open('bee1.pck.gz', 'rb')
     train_data, test_data, valid_data = cPickle.load(f)
     f.close()
-    return (train_data, test_data, valid_data)
+    return train_data, test_data, valid_data
 
 def train_bee1(train_data, test_data, num_epochs, batch_size, learning_rate, lmbda):
     print("Creating net")
     current_net = network2.Network([1024, 500, 100, 2], cost=CrossEntropyCost)
     print("Training net")
-    current_stats = current_net.SGD(train_data, num_epochs, batch_size, learning_rate, lmbda=lmbda, evaluation_data=test_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
+    current_stats = current_net.SGD(train_data, num_epochs, batch_size, learning_rate, lmbda, test_data, monitor_evaluation_cost=True, monitor_evaluation_accuracy=True, monitor_training_cost=True, monitor_training_accuracy=True)
     return current_net, current_stats
 
 
 # == BEE2_1S ==
 def load_bee2_1S_data():
     f = gzip.open('bee2_1S.pck.gz', 'rb')
-    training_data, validation_data, test_data = pickle.load(f)
+    train_data, test_data, valid_data = cPickle.load(f)
     f.close()
-    return (training_data, validation_data, test_data)
+    return train_data, test_data, valid_data
 
 
 # == BEE2_2S ==
 def load_bee2_2S_data():
     f = gzip.open('bee2_2S.pck.gz', 'rb')
-    training_data, validation_data, test_data = pickle.load(f)
+    train_data, test_data, valid_data = cPickle.load(f)
     f.close()
-    return (training_data, validation_data, test_data)
+    return train_data, test_data, valid_data
+
