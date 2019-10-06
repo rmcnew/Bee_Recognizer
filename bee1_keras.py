@@ -40,7 +40,7 @@ num_bee_tr = len(os.listdir(bee_training_dir))
 num_no_bee_tr = len(os.listdir(no_bee_training_dir))
 
 num_bee_val = len(os.listdir(bee_validation_dir))
-num_no_bee_val = len(os.listdir(no_bee_validation_dogs_dir))
+num_no_bee_val = len(os.listdir(no_bee_validation_dir))
 
 total_train = num_bee_tr + num_no_bee_tr
 total_val = num_bee_val + num_no_bee_tr
@@ -50,7 +50,7 @@ train_image_generator = ImageDataGenerator(rescale=1./255) # Generator for our t
 validation_image_generator = ImageDataGenerator(rescale=1./255) # Generator for our validation data
 
 train_data_gen = train_image_generator.flow_from_directory(batch_size=batch_size,
-                                                           directory=train_dir,
+                                                           directory=training_dir,
                                                            shuffle=True,
                                                            target_size=(image_height, image_width),
                                                            class_mode='binary')
