@@ -5,7 +5,7 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 
-X, Y = image_preloader("/home/rmcnew/USU/intelligent_systems/Bee_Recognizer/BEE1/test/test_files.txt", image_shape=(32, 32), mode='file', categorical_labels=True, normalize=True, files_extension=['.png'])
+X, Y = image_preloader("bee1_testing_files.txt", image_shape=(32, 32), mode='file', categorical_labels=True, normalize=True, files_extension=['.png'])
 
 X = np.reshape(X, (-1, 32, 32, 1))
 
