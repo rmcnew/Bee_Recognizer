@@ -12,7 +12,7 @@ script_name = os.path.basename(__file__)
 name = os.path.splitext(script_name)[0]
 print("Running {}".format(name))
 
-training, testing, validation = load_bee2_1s()
+training, testing, validation = load_bee2_2s()
 
 training_X, training_Y = training
 testing_X, testing_Y = testing
@@ -28,6 +28,22 @@ def create_model():
     net = conv_2d(net, 90, 5, activation='relu')
     net = max_pool_2d(net, 5)
     net = conv_2d(net, 180, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 360, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 720, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 1040, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 720, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 360, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 180, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 90, 5, activation='relu')
+    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 45, 5, activation='relu')
     net = max_pool_2d(net, 5)
     net = fully_connected(net, 2, activation='softmax')
     net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')

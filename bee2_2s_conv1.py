@@ -12,7 +12,7 @@ script_name = os.path.basename(__file__)
 name = os.path.splitext(script_name)[0]
 print("Running {}".format(name))
 
-training, testing, validation = load_bee2_1s()
+training, testing, validation = load_bee2_2s()
 
 training_X, training_Y = training
 testing_X, testing_Y = testing
