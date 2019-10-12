@@ -40,7 +40,7 @@ def load_model(save_file):
 
 def do_training():
     model = create_model()
-    model.fit(training_X, training_Y, n_epoch=100, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id='bee1_tflearn_train')
+    model.fit(training_X, training_Y, n_epoch=100, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id="{}_training".format(name))
     model.save("{}_model".format(name))
 
 
