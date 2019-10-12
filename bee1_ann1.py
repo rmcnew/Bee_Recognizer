@@ -8,6 +8,10 @@ from tflearn.layers.estimator import regression
 # the layout of the BEE and BUZZ datasets 
 from bee_data_maker import *
 
+script_name = os.path.basename(__file__)
+name = os.path.splitext(script_name)[0]
+print("Running {}".format(name))
+
 training, testing, validation = load_bee1()
 
 training_X, training_Y = training
@@ -19,19 +23,25 @@ testing_X = np.reshape(testing_X, (-1, 32, 32, 1))
 training_Y = np.reshape(training_Y, (-1, 2))
 testing_Y = np.reshape(testing_Y, (-1, 2))
 
-def do_training():
+def create_model():
     net = input_data(shape=[None, 32, 32, 1])
-
     net = fully_connected(net, 1024, activation='relu')
     net = fully_connected(net, 512, activation='relu')
+    net = fully_connected(net, 256, activation='relu')
     net = fully_connected(net, 2, activation='softmax')
     net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
-
     model = tflearn.DNN(net)
+    return model
 
-    model.fit(training_X, training_Y, n_epoch=2, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id='bee1_tflearn_train')
+def load_model(save_file):
+    model = create_model()
+    model.load(save_file)
+    return model
 
-    model.save_pickle('bee1_conv_train.pck')
+def do_training():
+    model = create_model()
+    model.fit(training_X, training_Y, n_epoch=100, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id='bee1_tflearn_train')
+    model.save("{}_model".format(name))
 
 
 if __name__ == '__main__':
