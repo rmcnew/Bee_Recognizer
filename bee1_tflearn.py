@@ -1,30 +1,38 @@
 import numpy as np
 import tflearn
-from tflearn.data_utils import image_preloader
 from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
+# tflearn.image_preloader does not work.  It just throws exceptions.
+# So I wrote my own custom image preloader and flattened / standardized
+# the layout of the BEE and BUZZ datasets 
+from bee_data_maker import *
 
-X, Y = image_preloader("bee1_testing_files.txt", image_shape=(32, 32), mode='file', categorical_labels=True, normalize=True, files_extension=['.png'])
+training, testing, validation = load_bee1()
 
-X = np.reshape(X, (-1, 32, 32, 1))
+training_X, training_Y = training
+testing_X, testing_Y = testing
 
-convnet = input_data(shape=[None, 32, 32, 1], name='input')
+training_X = np.reshape(training_X, (-1, 32, 32, 1))
+testing_X = np.reshape(testing_X, (-1, 32, 32, 1))
 
-convnet = conv_2d(convnet, 32, 2, activation='relu')
-convnet = max_pool_2d(convnet,2)
+training_Y = np.reshape(training_Y, (-1, 2))
+testing_Y = np.reshape(testing_Y, (-1, 2))
 
-convnet = conv_2d(convnet, 64, 2, activation='relu')
-convnet = max_pool_2d(convnet,2)
+def do_training():
+    net = input_data(shape=[None, 32, 32, 1])
 
-convnet = fully_connected(convnet, 1024, activation='relu')
-convnet = dropout(convnet, 0.8)
+    net = fully_connected(net, 1024, activation='relu')
+    net = fully_connected(net, 512, activation='relu')
+    net = fully_connected(net, 2, activation='softmax')
+    net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
 
-convnet = fully_connected(convnet,2,activation='softmax')
-convnet = regression(convnet, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy', name='targets')
+    model = tflearn.DNN(net)
 
-model = tflearn.DNN(convnet)
+    model.fit(training_X, training_Y, n_epoch=2, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id='bee1_tflearn_train')
 
-model.fit(X,Y, n_epoch=10, snapshot_step=500, show_metric=True, run_id='bee1_tflearn_test')
+    model.save_pickle('bee1_conv_train.pck')
 
-model.save('bee1_conv_test.model')
+
+if __name__ == '__main__':
+    do_training()

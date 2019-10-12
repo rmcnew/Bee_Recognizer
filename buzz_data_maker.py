@@ -36,13 +36,12 @@ def load_sound(sound_path):
     scaled_audio = audio/float(np.max(audio))
     return scaled_audio
 
-data = []
 
-def traverse_directory_for_sounds(path, buzz_setting):
+def traverse_directory_for_sounds(path, buzz_setting, data):
     for dirpath, dirnames, filenames in os.walk(path):
         for matched_file in fnmatch.filter(filenames, "*.wav"):
             full_path_file = os.path.join(dirpath, matched_file)
             print("Processing {}".format(full_path_file))
             wav = np.array(load_sound(full_path_file))
             data.append((wav, buzz_setting))
-
+    return data
