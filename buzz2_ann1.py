@@ -12,7 +12,7 @@ script_name = os.path.basename(__file__)
 name = os.path.splitext(script_name)[0]
 print("Running {}".format(name))
 
-training, testing = load_buzz1()
+training, testing, validation = load_buzz2()
 
 training_X, training_Y = training
 testing_X, testing_Y = testing
