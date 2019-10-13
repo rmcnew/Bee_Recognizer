@@ -11,6 +11,11 @@ import pickle as cPickle
 import gzip
 import numpy as np
 from scipy.io import wavfile
+from scipy.signal import resample 
+
+# downsample the audio to this rate
+#SAMPLE_RATE = 22050   
+SAMPLE_RATE = 11025   
 
 # buzz definitions
 BEE = np.array([1, 0, 0])
@@ -47,7 +52,8 @@ def load_pickle(file_name):
 
 def load_sound(sound_path):
     samplerate, audio = wavfile.read(sound_path)
-    scaled_audio = audio/float(np.max(audio))
+    downsampled_audio = resample(audio, SAMPLE_RATE)
+    scaled_audio = downsampled_audio/float(np.max(downsampled_audio))
     return scaled_audio
 
 
@@ -55,9 +61,10 @@ def traverse_directory_for_sounds(path, buzz_setting, data):
     for dirpath, dirnames, filenames in os.walk(path):
         for matched_file in fnmatch.filter(filenames, "*.wav"):
             full_path_file = os.path.join(dirpath, matched_file)
-            print("Processing {}".format(full_path_file))
+            #print("Processing {}".format(full_path_file))
             wav = np.array(load_sound(full_path_file))
-            data.append((wav, buzz_setting))
+            data[0].append(wav)
+            data[1].append(buzz_setting)
     return data
 
 def load_buzz_dataset(path):
@@ -67,9 +74,9 @@ def load_buzz_dataset(path):
     bee_path = os.path.join(path, 'bee')
     cricket_path = os.path.join(path, 'cricket')
     noise_path = os.path.join(path, 'noise')
-    data = traverse_directory_for_images(bee_path, BEE, data) 
-    data = traverse_directory_for_images(cricket_path, CRICKET, data) 
-    data = traverse_directory_for_images(noise_path, NOISE, data) 
+    data = traverse_directory_for_sounds(bee_path, BEE, data) 
+    data = traverse_directory_for_sounds(cricket_path, CRICKET, data) 
+    data = traverse_directory_for_sounds(noise_path, NOISE, data) 
     return data
 
 def load_buzz1():
