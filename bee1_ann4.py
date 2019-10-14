@@ -28,11 +28,10 @@ def create_model():
     net = fully_connected(net, 1024, activation='relu')
     net = fully_connected(net, 512, activation='relu')
     net = fully_connected(net, 256, activation='relu')
-    net = dropout(net, 0.8)
     net = fully_connected(net, 128, activation='relu')
     net = fully_connected(net, 64, activation='relu')
     net = fully_connected(net, 2, activation='softmax')
-    net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
+    net = regression(net, optimizer='adam', learning_rate=0.02, loss='categorical_crossentropy')
     model = tflearn.DNN(net)
     return model
 

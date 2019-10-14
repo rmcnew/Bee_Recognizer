@@ -26,11 +26,11 @@ testing_Y = np.reshape(testing_Y, (-1, 2))
 def create_model():
     net = input_data(shape=[None, 32, 32, 1])
     net = fully_connected(net, 1024, activation='relu')
-    net = fully_connected(net, 768, activation='relu')
-    net = fully_connected(net, 256, activation='relu')
-    net = fully_connected(net, 25, activation='relu')
+    net = fully_connected(net, 1768, activation='relu')
+    net = fully_connected(net, 1256, activation='relu')
+    net = fully_connected(net, 125, activation='relu')
     net = fully_connected(net, 2, activation='softmax')
-    net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
+    net = regression(net, optimizer='adam', learning_rate=0.03, loss='categorical_crossentropy')
     model = tflearn.DNN(net)
     return model
 
