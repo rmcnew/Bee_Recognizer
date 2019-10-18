@@ -26,12 +26,10 @@ testing_Y = np.reshape(testing_Y, (-1, 3))
 
 def create_model():
     net = input_data(shape=[None, SAMPLE_RATE, 1])
-    net = conv_1d(net, SAMPLE_RATE, 5, activation='relu')
-    net = max_pool_1d(net, 5)
-    net = conv_1d(net, 3192, 5, activation='relu')
-    net = max_pool_1d(net, 5)
-    net = conv_1d(net, 512, 5, activation='relu')
-    net = max_pool_1d(net, 5)
+    net = conv_1d(net, SAMPLE_RATE, 50, activation='relu')
+    net = max_pool_1d(net, 50)
+    net = conv_1d(net, SAMPLE_RATE*2, 50, activation='relu')
+    net = max_pool_1d(net, 50)
     net = fully_connected(net, 3, activation='softmax')
     net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
     model = tflearn.DNN(net)
@@ -45,7 +43,7 @@ def load_model(save_file):
 def do_training():
     model = create_model()
     model.fit(training_X, training_Y, n_epoch=100, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id="{}_training".format(name))
-    model.save("{}_model".format(name))
+    model.save("{}_model/{}_model".format(name, name))
 
 
 if __name__ == '__main__':

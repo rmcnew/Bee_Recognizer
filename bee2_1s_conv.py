@@ -12,7 +12,7 @@ script_name = os.path.basename(__file__)
 name = os.path.splitext(script_name)[0]
 print("Running {}".format(name))
 
-training, testing, validation = load_bee2_2s()
+training, testing, validation = load_bee2_1s()
 
 training_X, training_Y = training
 testing_X, testing_Y = testing
@@ -25,10 +25,10 @@ testing_Y = np.reshape(testing_Y, (-1, 2))
 
 def create_model():
     net = input_data(shape=[None, 90, 90, 1])
-    net = conv_2d(net, 90, 5, activation='relu')
-    net = max_pool_2d(net, 5)
-    net = conv_2d(net, 180, 5, activation='relu')
-    net = max_pool_2d(net, 5)
+    net = conv_2d(net, 90, 15, activation='relu')
+    net = max_pool_2d(net, 15)
+    net = conv_2d(net, 180, 15, activation='relu')
+    net = max_pool_2d(net, 15)
     net = fully_connected(net, 2, activation='softmax')
     net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
     model = tflearn.DNN(net)
