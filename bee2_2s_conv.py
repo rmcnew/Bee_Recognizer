@@ -25,12 +25,12 @@ testing_Y = np.reshape(testing_Y, (-1, 2))
 
 def create_model():
     net = input_data(shape=[None, 90, 90, 1])
-    net = conv_2d(net, 90, 15, activation='relu')
-    net = max_pool_2d(net, 15)
     net = conv_2d(net, 180, 15, activation='relu')
     net = max_pool_2d(net, 15)
+    net = conv_2d(net, 360, 15, activation='relu')
+    net = max_pool_2d(net, 15)
     net = fully_connected(net, 2, activation='softmax')
-    net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
+    net = regression(net, optimizer='adam', learning_rate=0.02, loss='categorical_crossentropy')
     model = tflearn.DNN(net)
     return model
 
