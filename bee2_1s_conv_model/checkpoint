@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/richardscottmcnew/intelligent_systems/Bee_Recognizer/bee2_1s_conv_model/bee2_1s_conv_model"
+all_model_checkpoint_paths: "/home/richardscottmcnew/intelligent_systems/Bee_Recognizer/bee2_1s_conv_model/bee2_1s_conv_model"
