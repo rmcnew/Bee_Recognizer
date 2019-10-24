@@ -17,6 +17,10 @@ training, testing = load_buzz1()
 training_X, training_Y = training
 testing_X, testing_Y = testing
 
+# free memory
+training = None
+testing = None
+
 # SAMPLE_RATE is defined in buzz_data_maker
 training_X = np.reshape(training_X, (-1, SAMPLE_RATE, 1))
 testing_X = np.reshape(testing_X, (-1, SAMPLE_RATE, 1))

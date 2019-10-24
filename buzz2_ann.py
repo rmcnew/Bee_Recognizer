@@ -12,10 +12,15 @@ script_name = os.path.basename(__file__)
 name = os.path.splitext(script_name)[0]
 print("Running {}".format(name))
 
-training, testing, validation = load_buzz2()
+#training, testing, validation = load_buzz2()
+training, testing = load_buzz2()
 
 training_X, training_Y = training
 testing_X, testing_Y = testing
+
+# free memory
+training = None
+testing = None
 
 # SAMPLE_RATE is defined in buzz_data_maker
 training_X = np.reshape(training_X, (-1, SAMPLE_RATE, 1))

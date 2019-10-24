@@ -17,6 +17,10 @@ training, testing = load_buzz1()
 training_X, training_Y = training
 testing_X, testing_Y = testing
 
+# free memory
+training = None
+testing = None
+
 # SAMPLE_RATE is defined in buzz_data_maker
 training_X = np.reshape(training_X, (-1, SAMPLE_RATE, 1))
 testing_X = np.reshape(testing_X, (-1, SAMPLE_RATE, 1))
@@ -26,10 +30,10 @@ testing_Y = np.reshape(testing_Y, (-1, 3))
 
 def create_model():
     net = input_data(shape=[None, SAMPLE_RATE, 1])
-    net = conv_1d(net, SAMPLE_RATE, 50, activation='relu')
-    net = max_pool_1d(net, 50)
-    net = conv_1d(net, SAMPLE_RATE*2, 50, activation='relu')
-    net = max_pool_1d(net, 50)
+    net = conv_1d(net, 400, 15, activation='relu')
+    net = max_pool_1d(net, 15)
+    net = conv_1d(net, 800, 15, activation='relu')
+    net = max_pool_1d(net, 15)
     net = fully_connected(net, 3, activation='softmax')
     net = regression(net, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
     model = tflearn.DNN(net)

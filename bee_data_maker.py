@@ -67,8 +67,6 @@ def load_image(image_path, expected_dimensions):
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     scaled_gray_image = gray_image/255.0
     return scaled_gray_image
-    #shaped = np.reshape(scaled_gray_image, (expected_length, 1))  
-    #return shaped
 
 
 # data should be a tuple of two lists: (image_data, label)

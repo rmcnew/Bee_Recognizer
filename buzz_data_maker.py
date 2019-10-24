@@ -8,7 +8,6 @@
 import os
 import fnmatch
 import pickle as cPickle
-import gzip
 import numpy as np
 from scipy.io import wavfile
 from scipy.signal import resample 
@@ -16,6 +15,7 @@ from scipy.signal import resample
 # downsample the audio to this rate
 #SAMPLE_RATE = 22050   
 SAMPLE_RATE = 11025   
+#SAMPLE_RATE = 5512   
 
 # buzz definitions
 BEE = np.array([1, 0, 0])
@@ -58,8 +58,12 @@ def load_sound(sound_path):
 
 
 def traverse_directory_for_sounds(path, buzz_setting, data):
+    #MOD = 4
+    #count = 0
     for dirpath, dirnames, filenames in os.walk(path):
         for matched_file in fnmatch.filter(filenames, "*.wav"):
+            #count = count + 1
+            #if count % MOD == 0:
             full_path_file = os.path.join(dirpath, matched_file)
             #print("Processing {}".format(full_path_file))
             wav = np.array(load_sound(full_path_file))
@@ -87,6 +91,6 @@ def load_buzz1():
 def load_buzz2():
    training = load_buzz_dataset(buzz2_training)
    testing = load_buzz_dataset(buzz2_testing)
-   validation = load_buzz_dataset(buzz2_validation)
-   return training, testing, validation
+   #validation = load_buzz_dataset(buzz2_validation)
+   return training, testing #, validation
 
