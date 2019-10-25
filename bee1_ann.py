@@ -25,19 +25,10 @@ testing_Y = np.reshape(testing_Y, (-1, 2))
 
 def create_model():
     net = input_data(shape=[None, 32, 32, 1])
-    net = fully_connected(net, 1024, activation='relu')
-    net = fully_connected(net, 4096, activation='relu')
-    net = fully_connected(net, 8182, activation='relu')
-    net = dropout(net, 0.8)
-    net = fully_connected(net, 4096, activation='relu')
-    net = fully_connected(net, 2048, activation='relu')
-    net = fully_connected(net, 1024, activation='relu')
-    net = dropout(net, 0.8)
-    net = fully_connected(net, 512, activation='relu')
-    net = fully_connected(net, 256, activation='relu')
-    net = fully_connected(net, 128, activation='relu')
+    net = fully_connected(net, 1024, activation='relu', regularizer='L2')
+    net = fully_connected(net, 333, activation='relu', regularizer='L2')
     net = fully_connected(net, 2, activation='softmax')
-    net = regression(net, optimizer='adam', learning_rate=0.3, loss='categorical_crossentropy')
+    net = regression(net, optimizer='SGD', learning_rate=0.07, loss='categorical_crossentropy')
     model = tflearn.DNN(net)
     return model
 
@@ -48,7 +39,7 @@ def load_model(save_file):
 
 def do_training():
     model = create_model()
-    model.fit(training_X, training_Y, n_epoch=100, batch_size=10, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id="{}_training".format(name))
+    model.fit(training_X, training_Y, n_epoch=30, batch_size=30, shuffle=True, validation_set=(testing_X, testing_Y), show_metric=True, run_id="{}_training".format(name))
     model.save("{}_model/{}_model".format(name, name))
 
 
