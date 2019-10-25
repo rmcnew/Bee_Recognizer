@@ -63,7 +63,7 @@ def load_image(image_path, expected_dimensions):
     image = cv2.imread(image_path)
     height, width = image.shape[:2]
     if width != expected_width or height != expected_height:
-        image = cv2.resize(image, (expected_width, expected_height), interpolation=cv2.INTER_CUBIC)
+        image = cv2.resize(image, (expected_width, expected_height), interpolation=cv2.INTER_AREA)
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     scaled_gray_image = gray_image/255.0
     return scaled_gray_image
